@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>LoopyCryptor API &mdash; loopyCryptor  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> loopyCryptor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">LoopyCryptor API</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">loopyCryptor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>LoopyCryptor API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="loopycryptor-api">
+<h1>LoopyCryptor API<a class="headerlink" href="#loopycryptor-api" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>All functions are implemented in Class:Cryptor, but we use lambda functions to wrapped up the Cryptor functions. So you can use it easier. Like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">loopyCryptor</span>
+
+<span class="c1"># generate a pair of key</span>
+<span class="n">public_key</span><span class="p">,</span> <span class="n">private_key</span> <span class="o">=</span> <span class="n">loopyCryptor</span><span class="o">.</span><span class="n">generate_RSA_key</span><span class="p">()</span>
+
+<span class="c1"># encrypt</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;I hate verilog.&quot;</span>
+<span class="n">cipher_byte</span> <span class="o">=</span> <span class="n">loopyCryptor</span><span class="o">.</span><span class="n">RSA_encrypt</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="n">public_key</span><span class="p">)</span>
+
+<span class="c1"># decrypt</span>
+<span class="n">decrypt_text</span> <span class="o">=</span> <span class="n">loopyCryptor</span><span class="o">.</span><span class="n">RSA_decrypt</span><span class="p">(</span><span class="n">cipher_byte</span><span class="p">,</span><span class="n">private_key</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decrypt_text</span><span class="p">)</span> <span class="c1"># I hate verilog.</span>
+</pre></div>
+</div>
+<span class="target" id="module-loopyCryptor.Cryptor.Cryptor"></span><p>Cryptor is based on AES-CBC-16 and RSA_PKCS</p>
+<dl class="function">
+<dt id="loopyCryptor.Cryptor.Cryptor.generate_RSA_key">
+<code class="sig-prename descclassname">loopyCryptor.Cryptor.Cryptor.</code><code class="sig-name descname">generate_RSA_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#loopyCryptor.Cryptor.Cryptor.generate_RSA_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>generate a RSA key pair</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return public_pem</dt>
+<dd class="field-odd"><p>byte</p>
+</dd>
+<dt class="field-even">Return private_pem</dt>
+<dd class="field-even"><p>byte</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="loopyCryptor.Cryptor.Cryptor.generate_AES_key">
+<code class="sig-prename descclassname">loopyCryptor.Cryptor.Cryptor.</code><code class="sig-name descname">generate_AES_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#loopyCryptor.Cryptor.Cryptor.generate_AES_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a AES key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return key</dt>
+<dd class="field-odd"><p>byte</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="loopyCryptor.Cryptor.Cryptor.AES_encrypt">
+<code class="sig-prename descclassname">loopyCryptor.Cryptor.Cryptor.</code><code class="sig-name descname">AES_encrypt</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#loopyCryptor.Cryptor.Cryptor.AES_encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encrypt: Encode the string into a byte-stream, then add it to a multiple of 16, then obtained a         symmetric encryption key that is updated daily and then encrypt the string with the key.It is worth noting         that ‘’ is used in the completion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – str String to be encrypted</p></li>
+<li><p><strong>key</strong> – byte AES key</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>byte Encrypted byte stream</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="loopyCryptor.Cryptor.Cryptor.AES_decrypt">
+<code class="sig-prename descclassname">loopyCryptor.Cryptor.Cryptor.</code><code class="sig-name descname">AES_decrypt</code><span class="sig-paren">(</span><em class="sig-param">byte</em>, <em class="sig-param">key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#loopyCryptor.Cryptor.Cryptor.AES_decrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrypt: Obtained the symmetric encrypted key, decrypt the byte stream and removed ‘’,finally decoded         it into a string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>byte</strong> – byte/string Bytes/string to be decrypted</p></li>
+<li><p><strong>key</strong> – byte AES key</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>str Decrypted string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="loopyCryptor.Cryptor.Cryptor.RSA_encrypt">
+<code class="sig-prename descclassname">loopyCryptor.Cryptor.Cryptor.</code><code class="sig-name descname">RSA_encrypt</code><span class="sig-paren">(</span><em class="sig-param">byte</em>, <em class="sig-param">public_key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#loopyCryptor.Cryptor.Cryptor.RSA_encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encrypt: import a RSA public key and use it to encrypt a byte stream</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>byte</strong> – byte/string Bytes/string to be encrypted</p></li>
+<li><p><strong>public_key</strong> – byte RSA public_key</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>byte Encrypted byte stream</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="loopyCryptor.Cryptor.Cryptor.RSA_decrypt">
+<code class="sig-prename descclassname">loopyCryptor.Cryptor.Cryptor.</code><code class="sig-name descname">RSA_decrypt</code><span class="sig-paren">(</span><em class="sig-param">byte</em>, <em class="sig-param">private_key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#loopyCryptor.Cryptor.Cryptor.RSA_decrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrypt: import a RSA public key and use it to decrypt a byte stream</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>byte</strong> – byte/string Bytes/string to be decrypted</p></li>
+<li><p><strong>private_key</strong> – byte RSA private_key</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>byte Decrypted byte</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, loopyme
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
