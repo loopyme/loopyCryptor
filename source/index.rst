@@ -1,7 +1,7 @@
 
 
 LoopyCryptor
-^^^^^^^^^^^^
+============
 
 .. toctree::
    :maxdepth: 2
@@ -17,6 +17,9 @@ All functions are implemented in Class:Cryptor, but we use lambda functions to w
 
     import loopyCryptor
 
+    ###############################################################################
+    # RSA
+    
     # generate a pair of key
     public_key, private_key = loopyCryptor.generate_RSA_key()
 
@@ -28,11 +31,25 @@ All functions are implemented in Class:Cryptor, but we use lambda functions to w
     decrypt_text = loopyCryptor.RSA_decrypt(cipher_byte,private_key)
     print(decrypt_text) # I hate verilog.
 
+    ###############################################################################
+    # AES
+    
+    # generate a key
+    AES_key = loopyCryptor.generate_AES_key()
+
+    # encrypt
+    text = "I hate verilog."
+    cipher_byte = loopyCryptor.AES_encrypt(text,AES_key)
+
+    # decrypt
+    decrypt_text = loopyCryptor.AES_decrypt(cipher_byte,AES_key)
+    print(decrypt_text) # I hate verilog.
+
 API
 ===
-.. automodule:: loopyCryptor.Cryptor.Cryptor
-   :members: set_AES_key, generate_RSA_key, generate_AES_key, AES_encrypt, AES_decrypt, RSA_encrypt, RSA_decrypt
-
+.. autoclass:: loopyCryptor.Cryptor.Cryptor
+   :members:
+   
 Indices and tables
 ==================
 
