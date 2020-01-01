@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='loopyCryptor',
-    version='0.0.1',
+    version='0.0.4',
     description=(
         'Easy-to-use string symmetric/asymmetric encryption tools based on PyCryptodome'
     ),
