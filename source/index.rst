@@ -4,10 +4,20 @@ LoopyCryptor
 ============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
+Introduction
+============
 
+What I've done here is wrap part of `pycryptodome` functions up with a 'pythonic' interface, which is easy to use. What's more, it can automatically determine the type of input(`bytes`or`str`), handle it properly and gives the output of the given type. 
+
+In short, I am trying to make a Cryptor that can help me as much as possible not to think about `bytes`, `string`, `byte boundary` and so many problems when I am trying to build a encrypted chat room.
+
+Installation
+============
+
+`LoopyCryptor` has been released on pypi, so you can install it with `pip install loopyCryptor`
 
 Examples
 ========
@@ -53,6 +63,7 @@ API
 Indices and tables
 ==================
 
+* :`Code repository <https://github.com/loopyme/loopyCrypto>`_
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`

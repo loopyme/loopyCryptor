@@ -125,7 +125,7 @@ class Cryptor:
         byte = cls._to_byte(text)
         key = cls._validate_key(cls.__AES_key if key is None else key)
 
-        byte += b"\0" * (15 - (len(byte) % 16))
+        byte += b"\0" * (16 - (len(byte) % 16))
         return AES.new(key, AES.MODE_CBC, key).encrypt(byte)
 
     @classmethod
