@@ -1,4 +1,5 @@
 import base64
+import hashlib
 from Crypto.Cipher import AES, PKCS1_v1_5
 from Crypto import Random
 from Crypto.PublicKey import RSA
@@ -163,7 +164,7 @@ class Cryptor:
         return cipher_byte
 
     @classmethod
-    def RSA_decrypt(cls, text, private_key=None,ret_str=True):
+    def RSA_decrypt(cls, text, private_key=None, ret_str=True):
         """
         Decrypt: import a RSA public key and use it to decrypt text
 
@@ -179,3 +180,19 @@ class Cryptor:
         rsa_key = RSA.importKey(private_key)
         text = PKCS1_v1_5.new(rsa_key).decrypt(base64.b64decode(byte), "ERROR")
         return cls._to_str(text, ret_str)
+
+    @staticmethod
+    def md5(content):
+        """
+        Run md5: If content is a list, it will update multiple times in items. Or it will return md5(content).
+
+        :param content: list/byte/str If it's a list, it will update multiple times in items.
+        :return: str md5 result in hexdigest
+        """
+        md5 = hashlib.md5()
+        if isinstance(content, list):
+            for item in content:
+                md5.update(Cryptor._to_byte(item))
+        else:
+            md5.update(Cryptor._to_byte(content))
+        return md5.hexdigest()

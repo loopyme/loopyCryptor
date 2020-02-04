@@ -13,13 +13,15 @@ except:
 
 from .Cryptor import Cryptor
 
-set_AES_key = lambda *arg,**args: Cryptor.set_AES_key(*arg,**args)
-set_RSA_key = lambda *arg,**args: Cryptor.set_RSA_key(*arg,**args)
+set_AES_key = Cryptor.set_AES_key
+set_RSA_key = Cryptor.set_RSA_key
 
-generate_RSA_key = lambda: Cryptor.generate_RSA_key()
-generate_AES_key = lambda: Cryptor.generate_AES_key()
+generate_RSA_key = Cryptor.generate_RSA_key
+generate_AES_key = Cryptor.generate_AES_key
 
-AES_encrypt = lambda *arg,**args: Cryptor.AES_encrypt(*arg,**args)
-AES_decrypt = lambda *arg,**args: Cryptor.AES_decrypt(*arg,**args)
-RSA_encrypt = lambda *arg,**args: Cryptor.RSA_encrypt(*arg,**args)
-RSA_decrypt = lambda *arg,**args: Cryptor.RSA_decrypt(*arg,**args)
+AES_encrypt = Cryptor.AES_encrypt
+AES_decrypt = Cryptor.AES_decrypt
+RSA_encrypt = Cryptor.RSA_encrypt
+RSA_decrypt = Cryptor.RSA_decrypt
+
+md5 = Cryptor.md5
