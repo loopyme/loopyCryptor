@@ -1,7 +1,8 @@
-import base64
 import hashlib
-from Crypto.Cipher import AES, PKCS1_v1_5
+from base64 import b64encode, b64decode
+
 from Crypto import Random
+from Crypto.Cipher import AES, PKCS1_v1_5
 from Crypto.PublicKey import RSA
 
 
@@ -56,8 +57,8 @@ class Cryptor:
                 )
             )
 
-    @classmethod
-    def _validate_key(cls, key):
+    @staticmethod
+    def _validate_key(key):
         """
         check if key is not None
 
@@ -68,7 +69,30 @@ class Cryptor:
 
         if key is None:
             raise AttributeError("No valid key was passed in")
-        return cls._to_byte(key)
+        return Cryptor._to_byte(key)
+
+    @staticmethod
+    def _cut_bytes(bytes):
+        """
+        Split the bytes by fixed length
+
+        :param bytes: bytes to be cut
+        """
+        cut_length = 3
+        byte_list = [bytes[cut_length * i:cut_length * i + cut_length] for i in range(len(bytes) // cut_length)]
+        if len(bytes) % cut_length != 0:
+            byte_list.append(bytes[-(len(bytes) % cut_length):])
+        return byte_list
+
+    @staticmethod
+    def _concat_byte_list(byte_list):
+        """
+        concat a byte list
+        """
+        res = b''
+        for b in byte_list:
+            res += b
+        return res
 
     @classmethod
     def set_AES_key(cls, AES_key):
@@ -77,17 +101,17 @@ class Cryptor:
 
         :param AES_key: bytes/string AES_key
         """
-        cls.__AES_key = cls._to_byte(AES_key)
+        cls.__AES_key = Cryptor._to_byte(AES_key)
 
     @classmethod
-    def set_RSA_key(cls, pri_key, pub_key):
+    def set_RSA_key(cls, pub_key, pri_key):
         """
         set a default RSA_key
 
-        :param pri_key: bytes/string private_key
         :param pri_key: bytes/string public_key
+        :param pri_key: bytes/string private_key
         """
-        cls.__RSA_key = (cls._to_byte(pri_key), cls._to_byte(pub_key))
+        cls.__RSA_key = (Cryptor._to_byte(pub_key), Cryptor._to_byte(pri_key))
 
     @classmethod
     def generate_RSA_key(cls, ret_str=True):
@@ -101,7 +125,7 @@ class Cryptor:
         rsa = RSA.generate(1024, Random.new().read)
         private_pem = rsa.exportKey()
         public_pem = rsa.publickey().exportKey()
-        return cls._to_str(public_pem, ret_str), cls._to_str(private_pem, ret_str)
+        return Cryptor._to_str(public_pem, ret_str), Cryptor._to_str(private_pem, ret_str)
 
     @classmethod
     def generate_AES_key(cls):
@@ -123,8 +147,8 @@ class Cryptor:
         :param key: byte AES key
         :return: byte Encrypted byte stream
         """
-        byte = cls._to_byte(text)
-        key = cls._validate_key(cls.__AES_key if key is None else key)
+        byte = Cryptor._to_byte(text)
+        key = Cryptor._validate_key(cls.__AES_key if key is None else key)
 
         byte += b"\0" * (16 - (len(byte) % 16))
         return AES.new(key, AES.MODE_CBC, key).encrypt(byte)
@@ -140,11 +164,11 @@ class Cryptor:
         :param ret_str: bool type of return value. If ret_str, it will return string, otherwise, it will return bytes.
         :return: str Decrypted string
         """
-        byte = cls._to_byte(byte)
-        key = cls._validate_key(cls.__AES_key if key is None else key)
+        byte = Cryptor._to_byte(byte)
+        key = Cryptor._validate_key(cls.__AES_key if key is None else key)
         plain_byte = AES.new(key, AES.MODE_CBC, key).decrypt(byte)
 
-        return cls._to_str(plain_byte.rstrip(b"\0"), ret_str)
+        return Cryptor._to_str(plain_byte.rstrip(b"\0"), ret_str)
 
     @classmethod
     def RSA_encrypt(cls, text, public_key=None):
@@ -155,13 +179,16 @@ class Cryptor:
         :param public_key: byte RSA public_key
         :return: byte Encrypted byte stream
         """
-        byte = cls._to_byte(text)
-        public_key = cls._validate_key(
-            public_key if public_key is not None else cls.__RSA_key[1]
+        bytes = Cryptor._to_byte(text)
+        bytes_list = Cryptor._cut_bytes(bytes)
+
+        public_key = Cryptor._validate_key(
+            public_key if public_key is not None else cls.__RSA_key[0]
         )
-        rsa_key = RSA.importKey(public_key)
-        cipher_byte = base64.b64encode(PKCS1_v1_5.new(rsa_key).encrypt(byte))
-        return cipher_byte
+        PKCS1 = PKCS1_v1_5.new(RSA.importKey(public_key))
+        cipher_bytes_list = map(lambda x: b64encode(PKCS1.encrypt(x)), bytes_list)
+
+        return Cryptor._concat_byte_list(cipher_bytes_list)
 
     @classmethod
     def RSA_decrypt(cls, text, private_key=None, ret_str=True):
@@ -173,13 +200,15 @@ class Cryptor:
         :param private_key: byte RSA private_key
         :return: str Decrypted string
         """
-        byte = cls._to_byte(text)
-        private_key = cls._validate_key(
-            private_key if private_key is not None else cls.__RSA_key[0]
+        byte_list = Cryptor._to_byte(text).split(b'=')[:-1]
+        private_key = Cryptor._validate_key(
+            private_key if private_key is not None else cls.__RSA_key[1]
         )
-        rsa_key = RSA.importKey(private_key)
-        text = PKCS1_v1_5.new(rsa_key).decrypt(base64.b64decode(byte), "ERROR")
-        return cls._to_str(text, ret_str)
+        PKCS1 = PKCS1_v1_5.new(RSA.importKey(private_key))
+
+        bytes_list = map(lambda x: PKCS1.decrypt(b64decode(x + b'='), "ERROR"), byte_list)
+        bytes = Cryptor._concat_byte_list(bytes_list)
+        return Cryptor._to_str(bytes, ret_str)
 
     @staticmethod
     def md5(content):

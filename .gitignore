@@ -5,8 +5,7 @@ dist/
 build/
 loopyCryptor.egg-info/
 *.pyc
-# Created by https://www.gitignore.io/api/macos,pycharm
-# Edit at https://www.gitignore.io/?templates=macos,pycharm
+dev_test.py
 
 ### macOS ###
 # General
