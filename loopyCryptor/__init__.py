@@ -13,8 +13,8 @@ except:
 
 from .Cryptor import Cryptor
 
-set_AES_key = Cryptor.set_AES_key
-set_RSA_key = Cryptor.set_RSA_key
+set_default_AES_key = Cryptor.set_default_AES_key
+set_default_RSA_key = Cryptor.set_default_RSA_key
 
 generate_RSA_key = Cryptor.generate_RSA_key
 generate_AES_key = Cryptor.generate_AES_key
@@ -25,3 +25,21 @@ RSA_encrypt = Cryptor.RSA_encrypt
 RSA_decrypt = Cryptor.RSA_decrypt
 
 md5 = Cryptor.md5
+
+
+def encrypt(obj, method="AES", key=None):
+    if method == "AES":
+        return AES_encrypt(obj, key)
+    elif method == "RSA":
+        return RSA_encrypt(obj, key)
+    else:
+        raise NotImplementedError("Sorry: Method:{} haven't been supported by LoopyCryptor.".format(method))
+
+
+def decrypt(byte, method="AES", key=None):
+    if method == "AES":
+        return AES_decrypt(byte, key)
+    elif method == "RSA":
+        return RSA_decrypt(byte, key)
+    else:
+        raise NotImplementedError("Sorry: Method:{} haven't been supported by LoopyCryptor.".format(method))
