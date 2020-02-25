@@ -1,7 +1,7 @@
-import hashlib
-
+import Crypto.Signature.PKCS1_v1_5 as sign_PKCS1_v1_5
 from Crypto import Random
 from Crypto.Cipher import AES, PKCS1_v1_5
+from Crypto.Hash import MD5
 from Crypto.PublicKey import RSA
 
 from loopyCryptor.Serializer import *
@@ -44,15 +44,15 @@ class Cryptor:
         cls.__default_AES_key = to_byte(AES_key, force_convert=False)
 
     @classmethod
-    def set_default_RSA_key(cls, encrypt_key: bytes or str, decrypt_key: bytes or str):
+    def set_default_RSA_key(cls, public_key: bytes or str, private_key: bytes or str):
         """
         set a pair of default RSA_key, which store in Class-variable:__default_RSA_key.
 
-        :param encrypt_key:
-        :param decrypt_key:
+        :param public_key:
+        :param private_key:
         :return:
         """
-        cls.__default_RSA_key = (to_byte(encrypt_key, force_convert=False), to_byte(decrypt_key, force_convert=False))
+        cls.__default_RSA_key = (to_byte(public_key, force_convert=False), to_byte(private_key, force_convert=False))
 
     @classmethod
     def generate_RSA_key(cls, set_default=False):
@@ -151,20 +151,38 @@ class Cryptor:
         bytes_list = map(lambda x: PKCS1.decrypt(x, "ERROR"), byte_list)
         return to_obj(concat_byte_list(bytes_list, add_break=False))
 
+    @classmethod
+    def RSA_sign(cls, obj, key: bytes or str = None):
+        key = Cryptor._validate_key(
+            key if key is not None else cls.__default_RSA_key[1]
+        )
+        PKCS1 = sign_PKCS1_v1_5.new(RSA.importKey(key))
+        return PKCS1.sign(Cryptor.md5(obj, ret_hex=False))
+
+    @classmethod
+    def RSA_verify(cls, obj, signature, key: bytes or str = None):
+        key = Cryptor._validate_key(
+            key if key is not None else cls.__default_RSA_key[0]
+        )
+        PKCS1 = sign_PKCS1_v1_5.new(RSA.importKey(key))
+        return PKCS1.verify(Cryptor.md5(obj, ret_hex=False), signature)
+
     @staticmethod
-    def md5(obj):
+    def md5(obj, ret_hex=True):
         """
         Run md5: If content is a list, it will update multiple times in items. Or it will return md5(content).
 
         :param obj: list/byte/str If it's a list, it will update multiple times in items.
-        :return: str md5 result in hexdigest
+        :param ret_hex: return hexdigest, or it will return a md5 obj
+        :return: str/md5 md5 result
         """
-        md5 = hashlib.md5()
+        md5_ = MD5.new()
+
         if isinstance(obj, list):
             for item in obj:
-                md5.update(to_byte(item))
+                md5_.update(to_byte(item))
         elif len(to_byte(obj)) > 500:
-            return Cryptor.md5(cut_bytes(to_byte(obj), cut_length=500))
+            return Cryptor.md5(cut_bytes(to_byte(obj), cut_length=500), ret_hex=ret_hex)
         else:
-            md5.update(to_byte(obj))
-        return md5.hexdigest()
+            md5_.update(to_byte(obj))
+        return md5_.hexdigest() if ret_hex else md5_

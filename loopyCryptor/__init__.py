@@ -25,6 +25,8 @@ RSA_encrypt = Cryptor.RSA_encrypt
 RSA_decrypt = Cryptor.RSA_decrypt
 
 md5 = Cryptor.md5
+sign = Cryptor.RSA_sign
+verify = Cryptor.RSA_verify
 
 
 def encrypt(obj, method="AES", key=None):

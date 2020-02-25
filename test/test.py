@@ -79,6 +79,23 @@ class MyTestCase(unittest.TestCase):
             encrypt_text = RSA_encrypt(text)
             self.assertEqual(text, RSA_decrypt(encrypt_text))
 
+    def test_md5(self):
+        from loopyCryptor import md5
+        for random_obj in [MyTestCase.random_byte, MyTestCase.random_obj, MyTestCase.random_str,
+                           MyTestCase.random_list, MyTestCase.ret_cls, MyTestCase.ret_func]:
+            md5(random_obj())
+
+    def test_sign(self):
+        from loopyCryptor import sign, verify, generate_RSA_key
+        generate_RSA_key(set_default=True)
+        for random_obj in [MyTestCase.random_byte, MyTestCase.random_obj, MyTestCase.random_str,
+                           MyTestCase.random_list, MyTestCase.ret_cls, MyTestCase.ret_func]:
+            obj = random_obj()
+            signature = sign(obj)
+            self.assertTrue(verify(obj, signature))
+        for _ in range(10):
+            self.assertFalse(verify(obj, MyTestCase.random_byte()))
+
 
 if __name__ == '__main__':
     unittest.main()
